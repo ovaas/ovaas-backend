@@ -2,8 +2,8 @@
 
 azure-functions
 Pillow
-grpcio==1.27.2
+grpcio==1.32.0
 numpy
-opencv-python==4.4.0.40
+opencv-python-headless
 scipy
 tensorflow-serving-api
