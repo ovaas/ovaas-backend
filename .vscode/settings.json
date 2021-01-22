@@ -1,0 +1,16 @@
+{
+  "azureFunctions.deploySubpath": ".",
+  "azureFunctions.scmDoBuildDuringDeployment": true,
+  "azureFunctions.pythonVenv": ".venv",
+  "azureFunctions.projectLanguage": "Python",
+  "azureFunctions.projectRuntime": "~3",
+  "debug.internalConsoleOptions": "neverOpen",
+  "cSpell.words": [
+    "grpc",
+    "numpy"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUnboundVariable" : "information",
+   },
+  "cSpell.enabled": false
+}
