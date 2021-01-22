@@ -91,7 +91,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             #text[0] = text[0].encode().decode('utf-8')
 #             text = text[0].encode().decode('utf-8')
             if len(text[0]) == 0:
-                return func.HttpResponse(f'AI model could not understand your handwriting', status_code=404)
+                return func.HttpResponse(f'AI model could not understand your handwriting', status_code=500)
 
             text = text[0]
 
