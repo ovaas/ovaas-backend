@@ -12,7 +12,7 @@ import numpy as np
 import os
 
 _HOST = os.environ.get("HUMANPOSE_IPADDRESS")
-_PORT = os.environ.get("HUMAN_POSE_PORT")
+_PORT = os.environ.get("HUMANPOSE_PORT")
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
