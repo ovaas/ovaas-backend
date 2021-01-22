@@ -63,13 +63,13 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             input_image = prep.preprocess_input(
                 img, height=input_height, width=input_width)[None, :, :, :]
             #input_image = prep.preprocess_input(np.array(img)[:, :, 0], height=input_height, width=input_width)[None,:,:,:]
-            logging.info(f'Input_Image Success')
+            logging.info(f'input_image success')
 
             request = predict_pb2.PredictRequest()
             request.model_spec.name = 'handwritten-japanese-recognition'
             request.inputs["actual_input"].CopyFrom(
                 make_tensor_proto(input_image, shape=input_image.shape))
-            logging.info(f'Requse Detail  Success')
+            logging.info(f'Request detail success')
 
             # send to infer model by grpc
 
@@ -77,7 +77,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT))
             stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
             output = stub.Predict(request, timeout=10.0)
-            logging.info(f'Grpc Success{output}')
+            logging.info(f'Process success')
             result = make_ndarray(output.outputs["output"])
 
             timecost = time()-start
@@ -99,12 +99,13 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             # Fix: just response result and status code
             logging.info(f'Text Content{text}')
 
-            #MIMETYPE =  'image/jpeg'
-            return func.HttpResponse(json.dumps({
+            response = {
                 'count': len(text),
                 'timecost': timecost,
                 'text': text
-            }))
+            }
+
+            return func.HttpResponse(json.dumps(response), mimetype="application/json")
 
         else:
             logging.warning(f'ID:{event_id},Failed to get file,down.')
