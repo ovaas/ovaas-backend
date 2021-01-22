@@ -12,7 +12,7 @@ import numpy as np
 import os
 
 _HOST = os.environ.get("HANDWRITTEN_IPADDRESS")
-_PORT = os.environ.get("HAND_WRITTEN_PORT")
+_PORT = os.environ.get("HANDWRITTEN_PORT")
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
