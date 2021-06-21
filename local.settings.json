@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "HUMANPOSE_IPADDRESS": "localhost",
+    "HUMANPOSE_PORT": "9000",
+    "HANDWRITTEN_IPADDRESS": "localhost",
+    "HANDWRITTEN_PORT": "9001",
+    "COLORIZATION_IPADDRESS": "localhost",
+    "COLORIZATION_PORT": "9002",
+    "OBJECTDETECTION_IPADDRESS": "localhost",
+    "OBJECTDETECTION_PORT": "9003"
+  }
+}

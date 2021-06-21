@@ -1,2 +1,8 @@
 local.settings.json
 .venv
+.git*
+.vscode
+test
+models
+azurite
+scripts

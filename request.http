@@ -1,0 +1,13 @@
+POST http://localhost:7071/api/HttpTriggerHumanPose HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="20210604_102305.jpg"
+Content-Type: image/jpeg
+
+< ./baseball.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

@@ -20,7 +20,7 @@ project.lock.json
 /data
 .secrets
 appsettings.json
-local.settings.json
+#local.settings.json
 
 node_modules
 dist
@@ -42,6 +42,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-request.http
+#request.http
 *.png
 log
+models
+azurite
+ovms
