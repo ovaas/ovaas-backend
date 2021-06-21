@@ -8,7 +8,7 @@ if [ ! -d $dir ]; then
 fi
 
 PORT_NUMBER=$3
-MODEL_SERVER_VERSION="latest"
+MODEL_SERVER_VERSION=$4
 MODEL_NAME=$1
 MODEL_PATH="az://ovms/$MODEL_NAME"
 IP_ADDRESS=$2

@@ -55,7 +55,7 @@ Now you are ready to launch some docker containers for developping. The first on
 - Launch a local Azure storage using the Azurite Docker image
 
     Windows 10
-    ```cmd
+    ```dos
     scripts\LaunchAzurite.bat
     ```
     Linux / macOS
@@ -70,37 +70,74 @@ Now you are ready for running a sample application. Follow the next step.
 - Look at the list of all pre-trained models by the command below.
 
     Windows 10
-    ```cmd
-    scripts\GetModelList.bat
-    ```
-    Linux / macOS
-    ```bash
-    sh scripts/GetModelList.sh
-    ```
+    ```dos
+    scripts\GetModelList.bat 1st-parameter
 
-- Choose one model to download and download it by the command below. The name "human-pose-estimation-0001" can be changed as you need.
-    Windows 10
-    ```cmd
-    scripts\DownloadModel.bat human-pose-estimation-0001
+    rem for latest OpenVINO model zoo
+    scripts\GetModelList.bat latest
+    rem for ver 2021.1 OpenVINO model zoo
+    scripts\GetModelList.bat 2021.1
     ```
     Linux / macOS
     ```bash
-    sh scripts/DownloadModel.sh human-pose-estimation-0001
+    scripts/GetModelList.sh 1st-parameter
+
+    # for latest OpenVINO model zoo
+    scripts/GetModelList.sh latest
+    # for ver 2021.1 OpenVINO model zoo
+    scripts/GetModelList.sh 2021.1
     ```
+    Here you need one parameter.
+    
+    - --1st parameter: The version of OpenVINO. Mostly "latest" works fine but sometimes specific model is provided only in specific version of OpenVINO. For example, our "Colorization" model is provided in the version "2021.1". That's why above example shows "2021.1" in command line. 
+
+- Choose one model to download and download it by the command below. For example, current applications use these models.
+
+    Windows 10
+    ```dos
+    scripts\DownloadModel.bat 1st-parameter 2nd-parameter 3rd-parameter 4th-parameter
+
+    rem For Humanpose
+    scripts\DownloadModel.bat human-pose-estimation-0001 latest
+    rem For Handwritten
+    scripts\DownloadModel.bat handwritten-japanese-recognition-0001 latest
+    rem For Colorization
+    scripts\DownloadModel.bat colorization-v2 2021.1
+    rem For Object Detection
+    rem Object detection is original model not in Open Model Zoo.
+    ```
+    Linux / macOS
+    ```bash
+    scripts/DownloadModel.sh 1st-parameter 2nd-parameter 3rd-parameter 4th-parameter
+
+    # For Humanpose
+    scripts/DownloadModel.sh human-pose-estimation-0001 latest
+    # For Handwritten
+    scripts/DownloadModel.sh handwritten-japanese-recognition-0001 latest
+    # For Colorization
+    scripts/DownloadModel.sh human-pose-estimation-0001 2021.1
+    # For Object Detection
+    # Object detection is original model not in Open Model Zoo.
+    ```
+    Here you need two parameters.
+    
+    - 1st-parameter: The model name
+    - 2nd-parameter: The version of OpenVINO. Mostly "latest" works fine but sometimes specific model is provided in only specific version of OpenVINO. For example, our "Colorization" model is provided in the version "2021.1". That's why above example shows "2021.1" in command line.  
+
 - Check if the model is downloaded in local folder. For example, above "human-pose-estimation-0001" should be here.
     ```cmd
-    PARENT_DIR/ovaas-backend-template/models/intel/human-pose-estimation-0001/FPXX
+    PARENT_DIR/ovaas-backend/models/intel/human-pose-estimation-0001/FPXX
     ```
 - Copy the absolute path to the XML file and the BIN file of the pre-trained model and upload the model to the local Azure Storage by the command below.
 
     Windows
-    ```cmd
-    python scripts\UploadModelFilesToAzureStorage.py --model_name human-pose-estimation --xml_file_path PARENT_DIR\ovaas-backend-template\models\intel\human-pose-estimation-0001\FPXX\human-pose-estimation-0001.xml --bin_file_path PARENT_DIR\ovaas-backend-template\models\intel\human-pose-estimation-0001\FPXX\human-pose-estimation-0001.bin
+    ```dos
+    python scripts\UploadModelFilesToAzureStorage.py --model_name human-pose-estimation --xml_file_path PARENT_DIR\ovaas-backend\models\intel\human-pose-estimation-0001\FPXX\human-pose-estimation-0001.xml --bin_file_path PARENT_DIR\ovaas-backend\models\intel\human-pose-estimation-0001\FPXX\human-pose-estimation-0001.bin
     ```
 
     Linux / macOS
-    ```cmd
-    python3 scripts/UploadModelFilesToAzureStorage.py --model_name human-pose-estimation --xml_file_path PARENT_DIR/ovaas-backend-template/models/intel/human-pose-estimation-0001/FPXX/human-pose-estimation-0001.xml --bin_file_path PARENT_DIR/ovaas-backend-template/models/intel/human-pose-estimation-0001/FPXX/human-pose-estimation-0001.bin
+    ```bash
+    python3 scripts/UploadModelFilesToAzureStorage.py --model_name human-pose-estimation --xml_file_path PARENT_DIR/ovaas-backend/models/intel/human-pose-estimation-0001/FPXX/human-pose-estimation-0001.xml --bin_file_path PARENT_DIR/ovaas-backend/models/intel/human-pose-estimation-0001/FPXX/human-pose-estimation-0001.bin
     ```
     Here you need four parameters.
     
@@ -112,24 +149,31 @@ Now you are ready for running a sample application. Follow the next step.
 - Launch a local OpenVINO model server
 
     Windows 10
-    ```cmd
-    scripts\LaunchOVMS.bat 1st-parameter 2nd-parameter 3rd-parameter
+    ```dos
+    scripts\LaunchOVMS.bat 1st-parameter 2nd-parameter 3rd-parameter 4th-parameter
 
-    #Example
-    scripts\LaunchOVMS.bat human-pose-estimation 192.168.10.107 9000
+    rem Example: Humanpose
+    scripts\LaunchOVMS.bat human-pose-estimation 192.168.10.107 9000 latest
+
+    rem Example: Colorization
+    scripts\LaunchOVMS.bat colorization 192.168.10.107 9000 2021.3
     ```
     Linux / macOS
-    ```cmd
-    sh scripts/LaunchOVMS.sh 1st-parameter 2nd-parameter 3rd-parameter
+    ```bash
+    sh scripts/LaunchOVMS.sh 1st-parameter 2nd-parameter 3rd-parameter 4th-parameter
 
-    #Example
-    sh scripts/LaunchOVMS.sh human-pose-estimation 192.168.10.107 9000
+    # Example: Humanpose
+    sh scripts/LaunchOVMS.sh human-pose-estimation 192.168.10.107 9000 latest
+
+    # Example: Colorization
+    sh scripts/LaunchOVMS.sh colorization 192.168.10.107 9000 2021.1
     ```
-    Here you need three parameters.
+    Here you need four parameters.
 
     - 1st-parameter: The unique model name you just named when to upload the model to the local Azure storage.
     - 2nd-parameter: The IP address assigned to your PC's ethernet adapter. Note: "localhost" and "127.0.0.1" will not work fine.
     - 3rd-parameter: The port number to communicate to a model server.
+    - 4th-parameter: The version of OpenVINO. Mostly "latest" works fine but sometimes specific model is provided in only specific version of OpenVINO. Set same version as you download the model in previous step.  
 
 ### Launch an Azure functions emulater on VSCode
 - From the "Run" on the menu bar, click "Start Debugging". Then the emulater should start automatically. You will see the logs like below if it starts successfully.

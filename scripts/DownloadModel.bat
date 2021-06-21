@@ -5,4 +5,5 @@ rem ディレクトリが存在するかチェックする
 If not exist %dir% mkdir %dir%
 
 SET model_name=%1
-docker run --rm -v %dir%:/share openvino/ubuntu18_dev:latest /bin/bash -c "cd /share && /opt/intel/openvino_2021/deployment_tools/tools/model_downloader/downloader.py --name %model_name%"
+SET openvino_version=%2
+docker run --rm -v %dir%:/share openvino/ubuntu18_dev:%openvino_version% /bin/bash -c "cd /share && /opt/intel/openvino_2021/deployment_tools/tools/model_downloader/downloader.py --name %model_name%"
