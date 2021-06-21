@@ -43,7 +43,6 @@ __pycache__/
 *$py.class
 
 #request.http
-*.png
 log
 models
 azurite

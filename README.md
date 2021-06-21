@@ -1,6 +1,9 @@
 
 # OVaaS Backend Development
 This is a OVaaS's backend source code. Please follow the instrunctions described below and try to have your custom backend application.
+![OVaaS Architecture](./img/ovaas-architecture.png "OVaaS Architecture")
+By the way, the backend of OVaaS consists of Azure Functions and Azure VM ScaleSet. And other than them, various technologies, softwares and services are included. You need to understand the overview of them as a first step.
+![OVaaS Backend](./img/ovaas-backend.png "OVaaS Backend")
 
 ## 0. Prerequisites
 - Windows 10 / Linux / macOS
