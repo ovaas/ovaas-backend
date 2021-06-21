@@ -68,7 +68,7 @@ Now you are ready to launch some docker containers for developping. The first on
     After the command executed, check if local Azure storage is launched by Azure Storage Explorer.
 
 Now you are ready for running a sample application. Follow the next step.
-## 2. Run the Human-Pose-Estimation sample
+## 2. Run the sample applications
 ### Launch a local OpenVINO Model server with a pre-trained model
 - Look at the list of all pre-trained models by the command below.
 
