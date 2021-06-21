@@ -189,5 +189,5 @@ These variables will be refered in a source code you will made in init.py.
   }
 }
 ```
-
-Enjoy!
+### Launch Azure Function Emulator and test it from request.http
+This is same as wht you have done on running the sample above. This would be not difficult. Enjoy anyway!
