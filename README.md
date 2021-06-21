@@ -164,5 +164,30 @@ You need to launch a new OpenVINO model server with your desired pre-trained mod
     2. Type an unique function name
     3. Choose "Anounymous" as Authorization Level
 - Then you will have a new function template in the same project. 
+
 ### Write a new application code following sample code
 Basically you can imitate the sample human-pose-estimation's __init__.py.
+
+### Add IP and PORT setting to local.settings.json
+If you would like to add new backend aapplication called "AI App", then add new IP address and port number setting into the file "local.settings.json" as below. Actually IP address should be localhost everytime for local development and port number should be different from the numbers already assigned. This example shows 9004 is assigned. 
+These variables will be refered in a source code you will made in init.py.
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "HUMANPOSE_IPADDRESS": "localhost",
+    "HUMANPOSE_PORT": "9000",
+    "HANDWRITTEN_IPADDRESS": "localhost",
+    "HANDWRITTEN_PORT": "9001",
+    "COLORIZATION_IPADDRESS": "localhost",
+    "COLORIZATION_PORT": "9002",
+    "OBJECTDETECTION_IPADDRESS": "localhost",
+    "OBJECTDETECTION_PORT": "9003",
+    "AIAPP_IPADDRESS": "localhost",
+    "AIAPP_PORT": "9004"
+  }
+}
+```
+
+Enjoy!
