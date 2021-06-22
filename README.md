@@ -118,7 +118,7 @@ Now you are ready for running a sample application. Follow the next step.
     # For Handwritten
     scripts/DownloadModel.sh handwritten-japanese-recognition-0001 latest
     # For Colorization
-    scripts/DownloadModel.sh human-pose-estimation-0001 2021.1
+    scripts/DownloadModel.sh colorization-v2 2021.1
     # For Object Detection
     # Object detection is original model not in Open Model Zoo.
     ```
@@ -159,7 +159,7 @@ Now you are ready for running a sample application. Follow the next step.
     scripts\LaunchOVMS.bat human-pose-estimation 192.168.10.107 9000 latest
 
     rem Example: Colorization
-    scripts\LaunchOVMS.bat colorization 192.168.10.107 9000 2021.3
+    scripts\LaunchOVMS.bat colorization 192.168.10.107 9000 2021.1
     ```
     Linux / macOS
     ```bash
