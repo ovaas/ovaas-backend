@@ -10,7 +10,7 @@ By the way, the backend of OVaaS consists of Azure Functions and Azure VM ScaleS
 - Python 3.7+
 - [Visual Studio Code](https://azure.microsoft.com/ja-jp/products/visual-studio-code/)
 - [Docker](https://docs.docker.com/get-docker/)
-- [Node.js](https://nodejs.org/ja/download/) (npmを使いたいため)
+- [Node.js](https://nodejs.org/ja/download/) (to use npm)
 - [Azure Storage Explorer](https://azure.microsoft.com/ja-jp/features/storage-explorer/)
 - [Azure Functions Core Tools (v3.x)](https://docs.microsoft.com/ja-jp/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash#install-the-azure-functions-core-tools)
 ## 1. Setup Development Environment
