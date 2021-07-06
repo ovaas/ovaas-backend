@@ -1,9 +1,9 @@
 @echo off
 
-rem ãƒã‚§ãƒƒã‚¯å¯¾è±¡ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æŒ‡å®š
+rem ƒ`ƒFƒbƒN‘ÎÛ‚ÌƒfƒBƒŒƒNƒgƒŠ‚ðŽw’è
 SET dir=%CD%\ovms
 
-rem ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+rem ƒfƒBƒŒƒNƒgƒŠ‚ª‘¶Ý‚·‚é‚©ƒ`ƒFƒbƒN‚·‚é
 If not exist %dir% mkdir %dir%
 
 SET PORT_NUMBER=%3
