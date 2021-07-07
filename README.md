@@ -99,7 +99,7 @@ Now you are ready for running a sample application. Follow the next step.
 
     Windows 10
     ```dos
-    scripts\DownloadModel.bat 1st-parameter 2nd-parameter 3rd-parameter 4th-parameter
+    scripts\DownloadModel.bat 1st-parameter 2nd-parameter
 
     rem For Humanpose
     scripts\DownloadModel.bat human-pose-estimation-0001 latest
@@ -112,7 +112,7 @@ Now you are ready for running a sample application. Follow the next step.
     ```
     Linux / macOS
     ```bash
-    scripts/DownloadModel.sh 1st-parameter 2nd-parameter 3rd-parameter 4th-parameter
+    scripts/DownloadModel.sh 1st-parameter 2nd-parameter
 
     # For Humanpose
     scripts/DownloadModel.sh human-pose-estimation-0001 latest
