@@ -51,6 +51,7 @@ After creating the venv, you need to choose a python interpreter to run an appli
     ```cmd
     python -m pip install --upgrade pip
     pip install -r requirements.txt
+	pip install azure-storage-blob
     ```
 
 ### Launch a local Azure Storage as a Docker container
