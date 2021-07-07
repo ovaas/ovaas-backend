@@ -31,6 +31,13 @@ try:
     upload_bin_file_path = args.bin_file_path
     upload_bin_file_name = model_name + "/1/" + Path(upload_bin_file_path).name
 
+    # Create the container.
+    try:
+        container_client = blob_service_client.create_container(container_name)
+    except Exception as excp:
+        print('Exception:')
+        print(excp)
+    
     # Create a blob client using the local xml file name as the name for the blob
     blob_client = blob_service_client.get_blob_client(container=container_name, blob=upload_xml_file_name)
 
