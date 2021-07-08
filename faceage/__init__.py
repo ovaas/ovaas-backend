@@ -1,5 +1,5 @@
-from shared_code import postprocessor as postp
-from shared_code import preprocessor as prep
+from . import postprocessor as postp
+from ..shared_code import preprocessor as prep
 from tensorflow import make_tensor_proto, make_ndarray
 from tensorflow_serving.apis import predict_pb2
 from tensorflow_serving.apis import prediction_service_pb2_grpc
@@ -11,16 +11,17 @@ import logging
 import numpy as np
 import os
 
-_HOST = os.environ.get("HUMANPOSE_IPADDRESS")
-_PORT = os.environ.get("HUMANPOSE_PORT")
-
+_HOST = os.environ.get("FACEDETECTION_IPADDRESS")
+_PORT1 = os.environ.get("FACEDETECTION_PORT")
+_PORT2 = os.environ.get("EMOTIONRECOGNIZATION_PORT")
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     _NAME = 'image'
 
     event_id = context.invocation_id
     logging.info(
-        f"Python humanpose function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT}")
+        f"Python face detection function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT1}\n \
+          Python emotion detection function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT2}")
 
     try:
         method = req.method
@@ -44,39 +45,43 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             img = prep.to_pil_image(img_bin)
             # rotate image with orientation value(for iOS, iPadOS)
             img=prep.rotate_image(img)
-            img_cv_copied = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
-            # w,h = 456,256
-            img = prep.resize(img)
+            # basic image of processing. 'frame' will be used later
+            frame = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+            # resize image to [300, 300]
+            img = prep.resize(img, w=300, h=300)
             img_np = np.array(img)
             img_np = img_np.astype(np.float32)
-            # hwc > bchw [1,3,256,456]
+            # hwc > bchw [1,3,300,300]
             img_np = prep.transpose(img_np)
-            # print(img_np.shape)
 
+            # face detection
             request = predict_pb2.PredictRequest()
-            request.model_spec.name = 'human-pose-estimation'
-            request.inputs["data"].CopyFrom(
-                make_tensor_proto(img_np, shape=img_np.shape))
+            request.model_spec.name = 'face-detection'
+            request.inputs["input.1"].CopyFrom(make_tensor_proto(img_np))
+
             # send to infer model by grpc
             start = time()
-            channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT))
+            channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT1))
             stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
             result = stub.Predict(request, timeout=10.0)
 
             # logging.warning(f'Output:{result}')
             logging.warning(f'OutputType:{type(result)}')
 
-            pafs = make_ndarray(result.outputs["Mconv7_stage2_L1"])[0]
-            heatmaps = make_ndarray(result.outputs["Mconv7_stage2_L2"])[0]
+            pafs = make_ndarray(result.outputs['527'])
+            out_face = np.squeeze(pafs)
+
+            #-----------------------------------------------------------
+            # output image which faces are surrounded with rectangles.
+            # Their age are shown on them.
+            frame=postp.finding_faces(frame, out_face)
+            #-----------------------------------------------------------
+
 
             timecost = time()-start
             logging.info(f"Inference complete,Takes{timecost}")
 
-            # post processing
-            c = postp.estimate_pose(heatmaps, pafs)
-            response_image = postp.draw_to_image(img_cv_copied, c)
-
-            imgbytes = cv2.imencode('.jpg', response_image)[1].tobytes()
+            imgbytes = cv2.imencode('.jpg', frame)[1].tobytes()
             MIMETYPE = 'image/jpeg'
 
             return func.HttpResponse(body=imgbytes, status_code=200, mimetype=MIMETYPE, charset='utf-8')
