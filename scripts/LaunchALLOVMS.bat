@@ -1,9 +1,9 @@
 @echo off
 
-rem チェック対象のディレクトリを指定
+rem specifiy the target directory
 SET dir=%CD%\ovms
 
-rem ディレクトリが存在するかチェックする
+rem check if the directory exists
 If not exist %dir% mkdir %dir%
 
 @REM model server ports
@@ -35,7 +35,7 @@ SET IP_ADDRESS=%1
 setlocal ENABLEDELAYEDEXPANSION
 
 @REM All servers are going to be started
-for /l %%i in (0,1,6) do (
+for /l %%i in (0,1,8) do (
     SET MODEL_PATH="az://ovms/!models[%%i]!"
     SET AZURE_STORAGE_CONNECTION_STRING="AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://!IP_ADDRESS!:10000/devstoreaccount1;QueueEndpoint=http://!IP_ADDRESS!:10001/devstoreaccount1;TableEndpoint=http://!IP_ADDRESS!:10002/devstoreaccount1;"
     docker run --rm -d -v !dir!:/log -p !PORT_NUMBER!:9000 -e AZURE_STORAGE_CONNECTION_STRING=!AZURE_STORAGE_CONNECTION_STRING! openvino/model_server:!MODEL_SERVER_VERSION! --model_path !MODEL_PATH! --model_name !models[%%i]! --port 9000 --log_level DEBUG --log_path "/log/!models[%%i]!.log" --file_system_poll_wait_seconds 0

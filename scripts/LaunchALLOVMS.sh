@@ -1,10 +1,9 @@
 #!/bin/bash
 
-#Specify the directory to be checked
+#specifiy the target directory
 dir="$(pwd)/ovms"
 
-#ディレクトリが存在するかチェックする
-# check whether 'dir' exists or not
+#check if the directory exists
 if [ ! -d $dir ]; then
     mkdir $dir
 fi
