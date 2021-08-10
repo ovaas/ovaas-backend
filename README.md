@@ -25,6 +25,7 @@ Recommend to install latest version of each software. All softwares can be insta
     - REST Client
 ### Clone this repository and open it with VSCode
 - Launch command prompt and change directory as you want.
+    - Make sure that the name of the directory path does not contain any spaces.
 - Clone this repository there by the command below
     ```cmd
     git clone https://github.com/OVaaS/ovaas-backend.git
