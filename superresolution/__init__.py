@@ -53,7 +53,6 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
                   img.crop((w_half,h_half,w,h))]
 
             outputs: np.ndarray = []
-            frames: np.ndarray = []
 
             for img in imgs:
                 # resize image to [640, 360]
@@ -102,9 +101,9 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
                 logging.info(f"Inference complete,Takes{timecost}")
 
             # merge all images
-            for i in [0,2]:
-                frames.append(np.concatenate(outputs[i:i+2], axis=1))
-            frame = np.concatenate(frames, axis=0)
+            frame1 = cv2.hconcat([outputs[0], outputs[1]])
+            frame2 = cv2.hconcat([outputs[2], outputs[3]])
+            frame = cv2.vconcat([frame1, frame2])
 
             imgbytes = cv2.imencode('.jpg', frame)[1].tobytes()
 
