@@ -9,7 +9,7 @@ if [ ! -d $dir ]; then
 fi
 
 # model server ports
-ports=("9000" "9001" "9002" "9003" "9004" "9005" "9006" "9007" "9008")
+ports=("9000" "9001" "9002" "9003" "9004" "9005" "9006" "9007" "9008" "9009")
 
 # model names
 models=("human-pose-estimation"
@@ -20,14 +20,15 @@ models=("human-pose-estimation"
         "midasnet"
         "yolo-v3"
         "face-detection"
-        "age-gender-recognition")
+        "age-gender-recognition"
+        "super-resolution")
 
 # All sercers have same "model server version" & "ip address"
 MODEL_SERVER_VERSION="latest"
 IP_ADDRESS=$1
 
 # All servers are going to be started
-for num in {0..8} ; do
+for num in {0..9} ; do
     PORT_NUMBER=${ports[$num]}
     MODEL_NAME=${models[$num]}
     MODEL_PATH="az://ovms/$MODEL_NAME"

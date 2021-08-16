@@ -5,6 +5,7 @@ POST http://localhost:7071/api/humanpose HTTP/1.1
 # POST http://localhost:7071/api/humansegmentation HTTP/1.1
 # POST http://localhost:7071/api/monodepth HTTP/1.1
 # POST http://localhost:7071/api/yolov3 HTTP/1.1
+# POST http://localhost:7071/api/superresolution HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
