@@ -180,6 +180,36 @@ Now you are ready for running a sample application. Follow the next step.
     - 3rd-parameter: The port number to communicate to a model server.
     - 4th-parameter: The version of OpenVINO. Mostly "latest" works fine but sometimes specific model is provided in only specific version of OpenVINO. Set same version as you download the model in previous step.  
 
+    When you launch all OpenVINO model server, you can use this script.  
+
+    Windows 10
+    ```dos
+    scripts\ALLLaunchOVMS.bat parameter
+    ```
+    Linux / macOS
+    ```bash
+    sh scripts/ALLLaunchOVMS.sh parameter
+    ```
+    Here you need a parameter.
+
+    - parameter: The IP address assigned to your PC's ethernet adapter. Note: "localhost" and "127.0.0.1" will not work fine.  
+
+    if you add models to "OVaaS-backend", you need to do that model names and model's ports in writting to ALLLaunchOVMS.bat & ALLLaunchOVMS.sh and rewrite the number of models(ports) like below.  
+
+    ALLLaunchOVMS.bat
+    ```bat
+    for /l %%i in (0,1,8) do (
+        ↓
+    for /l %%i in (0,1,10) do (
+    ```
+    ALLLaunchOVMS.sh
+    ```bash
+    for num in {0..8} ; do
+        ↓
+    for num in {0..10} ; do
+    ```    
+
+
 ### Launch an Azure functions emulater on VSCode
 - From the "Run" on the menu bar, click "Start Debugging". Then the emulater should start automatically. You will see the logs like below if it starts successfully.
     ```cmd

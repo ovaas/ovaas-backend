@@ -42,6 +42,18 @@ def transpose(data: np.array):
     r = np.expand_dims(r, axis=0)
     return r
 
+# for iOS and iPad OS
+def rotate_image(image: Image) -> Image:
+    ALLOCATION={3: 180,
+                6: -90,
+                8: 90}        #{orientation value : rotation angle}
+    exif=image._getexif()
+    # print(f"exif={exif}")
+    if exif != None and 274 in exif:
+        if exif[274] in ALLOCATION:
+            return image.rotate(ALLOCATION[exif[274]], expand=True)
+        else: return image
+    else: return image
 
 # handwritten
 # 1106

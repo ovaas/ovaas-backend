@@ -1,5 +1,5 @@
-from shared_code import postprocessor as postp
-from shared_code import preprocessor as prep
+from . import postprocessor as postp
+from ..shared_code  import preprocessor as prep
 from tensorflow import make_tensor_proto, make_ndarray
 from tensorflow_serving.apis import predict_pb2
 from tensorflow_serving.apis import prediction_service_pb2_grpc
@@ -11,8 +11,8 @@ import logging
 import numpy as np
 import os
 
-_HOST = os.environ.get("HUMANPOSE_IPADDRESS")
-_PORT = os.environ.get("HUMANPOSE_PORT")
+_HOST = os.environ.get("YOLOV3_IPADDRESS")
+_PORT = os.environ.get("YOLOV3_PORT")
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
@@ -38,45 +38,56 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
                     f'ID:{event_id},the file type was {files.content_type}.refused.')
                 return func.HttpResponse(f'only accept jpeg images', status_code=400)
 
-            # pre processing
-            # get image_bin form request
             img_bin = files.read()
+
             img = prep.to_pil_image(img_bin)
-            # rotate image with orientation value(for iOS, iPadOS)
             img=prep.rotate_image(img)
-            img_cv_copied = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
-            # w,h = 456,256
-            img = prep.resize(img)
+
+            frame = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+
+            # resize image to [416, 416]
+            img = prep.resize(img, w=416, h=416)
+            # img = prep.resize(img, w=608, h=608)
             img_np = np.array(img)
             img_np = img_np.astype(np.float32)
-            # hwc > bchw [1,3,256,456]
+            # hwc > bchw [1,3,416, 416]
             img_np = prep.transpose(img_np)
-            # print(img_np.shape)
 
+            # semantic segmentation
             request = predict_pb2.PredictRequest()
-            request.model_spec.name = 'human-pose-estimation'
-            request.inputs["data"].CopyFrom(
-                make_tensor_proto(img_np, shape=img_np.shape))
+            request.model_spec.name = 'yolo-v3'
+            # request.model_spec.name = 'yolo-v4'
+            request.inputs["input_1"].CopyFrom(make_tensor_proto(img_np))
+            # request.inputs["image_input"].CopyFrom(make_tensor_proto(img_np))
+
             # send to infer model by grpc
             start = time()
             channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT))
             stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
+            channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT))
             result = stub.Predict(request, timeout=10.0)
 
             # logging.warning(f'Output:{result}')
             logging.warning(f'OutputType:{type(result)}')
 
-            pafs = make_ndarray(result.outputs["Mconv7_stage2_L1"])[0]
-            heatmaps = make_ndarray(result.outputs["Mconv7_stage2_L2"])[0]
+            # print(result.outputs)
+            
+            output1=make_ndarray(result.outputs['conv2d_58/Conv2D/YoloRegion'])
+            output2=make_ndarray(result.outputs['conv2d_66/Conv2D/YoloRegion'])
+            output3=make_ndarray(result.outputs['conv2d_74/Conv2D/YoloRegion'])
+            outputs=[output1, output2, output3]
+            #-----------------------------------------------------------
+            # output image which objects are surrounded with rectangles.
+            # Their labels are shown on them.
+            frame=postp.object_detection(frame, img_np, outputs)
+            #-----------------------------------------------------------
+
 
             timecost = time()-start
             logging.info(f"Inference complete,Takes{timecost}")
 
-            # post processing
-            c = postp.estimate_pose(heatmaps, pafs)
-            response_image = postp.draw_to_image(img_cv_copied, c)
-
-            imgbytes = cv2.imencode('.jpg', response_image)[1].tobytes()
+            imgbytes = cv2.imencode('.jpg', frame)[1].tobytes()
+            # imgbytes = prep.encode(image)
             MIMETYPE = 'image/jpeg'
 
             return func.HttpResponse(body=imgbytes, status_code=200, mimetype=MIMETYPE, charset='utf-8')

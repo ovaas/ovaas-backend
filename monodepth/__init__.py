@@ -1,6 +1,6 @@
-from shared_code import postprocessor as postp
-from shared_code import preprocessor as prep
-from tensorflow import make_tensor_proto, make_ndarray
+from . import postprocessor as postp
+from ..shared_code import preprocessor as prep
+from tensorflow import make_tensor_proto, make_ndarray, cast
 from tensorflow_serving.apis import predict_pb2
 from tensorflow_serving.apis import prediction_service_pb2_grpc
 from time import time
@@ -10,9 +10,10 @@ import grpc
 import logging
 import numpy as np
 import os
+from PIL import Image
 
-_HOST = os.environ.get("HUMANPOSE_IPADDRESS")
-_PORT = os.environ.get("HUMANPOSE_PORT")
+_HOST = os.environ.get("MONODEPTH_IPADDRESS")
+_PORT = os.environ.get("MONODEPTH_PORT")
 
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
@@ -44,19 +45,20 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             img = prep.to_pil_image(img_bin)
             # rotate image with orientation value(for iOS, iPadOS)
             img=prep.rotate_image(img)
-            img_cv_copied = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
-            # w,h = 456,256
-            img = prep.resize(img)
-            img_np = np.array(img)
+            # get width and height value of img
+            w, h=img.size
+            # resize image to [384, 384]
+            img_np = prep.resize(img, w=384, h=384)
+            img_np = np.array(img_np)
             img_np = img_np.astype(np.float32)
-            # hwc > bchw [1,3,256,456]
+            # hwc > bchw [1,3,384, 384]
             img_np = prep.transpose(img_np)
-            # print(img_np.shape)
 
+            # semantic segmentation
             request = predict_pb2.PredictRequest()
-            request.model_spec.name = 'human-pose-estimation'
-            request.inputs["data"].CopyFrom(
-                make_tensor_proto(img_np, shape=img_np.shape))
+            request.model_spec.name = 'midasnet'
+            request.inputs["image"].CopyFrom(make_tensor_proto(img_np))
+
             # send to infer model by grpc
             start = time()
             channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT))
@@ -66,17 +68,27 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             # logging.warning(f'Output:{result}')
             logging.warning(f'OutputType:{type(result)}')
 
-            pafs = make_ndarray(result.outputs["Mconv7_stage2_L1"])[0]
-            heatmaps = make_ndarray(result.outputs["Mconv7_stage2_L2"])[0]
+            output = result.outputs['inverse_depth']
+            output = np.squeeze(make_ndarray(output))
+
+            #-----------------------------------------------------------
+            # img's gray scale image
+            gray=img.convert('L')
+            # human segmentation mask image
+            mask=postp.monodepth(output, w, h)
+            # masking 'gray' and 'mask' images
+            image=Image.composite(gray, img, mask)
+
+            image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
+
+            #-----------------------------------------------------------
+
 
             timecost = time()-start
             logging.info(f"Inference complete,Takes{timecost}")
 
-            # post processing
-            c = postp.estimate_pose(heatmaps, pafs)
-            response_image = postp.draw_to_image(img_cv_copied, c)
-
-            imgbytes = cv2.imencode('.jpg', response_image)[1].tobytes()
+            imgbytes = cv2.imencode('.jpg', image)[1].tobytes()
+            # imgbytes = prep.encode(image)
             MIMETYPE = 'image/jpeg'
 
             return func.HttpResponse(body=imgbytes, status_code=200, mimetype=MIMETYPE, charset='utf-8')
