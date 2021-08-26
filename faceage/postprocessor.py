@@ -8,8 +8,8 @@ import cv2
 import os
 import numpy as np
 
-_HOST = os.environ.get("FACEDETECTION_IPADDRESS")
-_PORT2 = os.environ.get("EMOTIONRECOGNIZATION_PORT")
+_HOST = os.environ.get("AGEGENDER_IPADDRESS")
+_PORT2 = os.environ.get("AGEGENDER_PORT")
 
 # draw something
 def draw_data(frame, faces, data, age):

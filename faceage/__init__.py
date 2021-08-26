@@ -13,7 +13,7 @@ import os
 
 _HOST = os.environ.get("FACEDETECTION_IPADDRESS")
 _PORT1 = os.environ.get("FACEDETECTION_PORT")
-_PORT2 = os.environ.get("EMOTIONRECOGNIZATION_PORT")
+_PORT2 = os.environ.get("AGEGENDER_PORT")
 
 def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     _NAME = 'image'
