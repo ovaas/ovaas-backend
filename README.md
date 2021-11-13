@@ -184,25 +184,25 @@ Now you are ready for running a sample application. Follow the next step.
 
     Windows 10
     ```dos
-    scripts\ALLLaunchOVMS.bat parameter
+    scripts\LaunchALLOVMS.bat parameter
     ```
     Linux / macOS
     ```bash
-    sh scripts/ALLLaunchOVMS.sh parameter
+    sh scripts/LaunchALLOVMS.sh parameter
     ```
     Here you need a parameter.
 
     - parameter: The IP address assigned to your PC's ethernet adapter. Note: "localhost" and "127.0.0.1" will not work fine.  
 
-    if you add models to "OVaaS-backend", you need to do that model names and model's ports in writting to ALLLaunchOVMS.bat & ALLLaunchOVMS.sh and rewrite the number of models(ports) like below.  
+    if you add models to "OVaaS-backend", you need to do that model names and model's ports in writting to LaunchALLOVMS.bat & LaunchALLOVMS.sh and rewrite the number of models(ports) like below.  
 
-    ALLLaunchOVMS.bat
+    LaunchALLOVMS.bat
     ```bat
     for /l %%i in (0,1,8) do (
         ↓
     for /l %%i in (0,1,10) do (
     ```
-    ALLLaunchOVMS.sh
+    LaunchALLOVMS.sh
     ```bash
     for num in {0..8} ; do
         ↓
