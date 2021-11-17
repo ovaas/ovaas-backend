@@ -96,6 +96,9 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             output_mono = np.squeeze(output_mono)
             maskout_mono=postp.make_mono_mask(output_mono, w, h)
 
+            # make human segmentation mask image
+            maskout_human=postp.make_human_mask(output_human, w, h)
+            
             # make a black image
             black = np.zeros((h, w, 3))
             black = black.astype(np.uint8)
@@ -105,11 +108,11 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             # make an image by blending 'black' &'img' using 'maskout_mono'.
             image=Image.composite(black, img, maskout_mono)
 
-            # make human segmentation mask image
-            maskout_human=postp.make_human_mask(output_human, w, h)
-
             # make an image by blending 'img' & 'image' using 'maskout_human'.
             image=Image.composite(img, image, maskout_human)
+
+            # image=Image.composite(img, black, maskout_human)
+            # image=Image.composite(image, img, maskout_mono)
 
             image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
 
