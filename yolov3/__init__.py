@@ -20,7 +20,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
 
     event_id = context.invocation_id
     logging.info(
-        f"Python humanpose function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT}")
+        f"Python yolo-v3 function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT}")
 
     try:
         method = req.method

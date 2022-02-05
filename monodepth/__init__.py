@@ -21,7 +21,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
 
     event_id = context.invocation_id
     logging.info(
-        f"Python humanpose function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT}")
+        f"Python monodepth function start process.\nID:{event_id}\nBack-end server host: {_HOST}:{_PORT}")
 
     try:
         method = req.method
@@ -54,7 +54,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             # hwc > bchw [1,3,384, 384]
             img_np = prep.transpose(img_np)
 
-            # semantic segmentation
+            # estimate depth
             request = predict_pb2.PredictRequest()
             request.model_spec.name = 'midasnet'
             request.inputs["image"].CopyFrom(make_tensor_proto(img_np))
