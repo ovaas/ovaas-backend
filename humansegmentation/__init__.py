@@ -64,7 +64,7 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             options = [('grpc.max_receive_message_length', 8388653)]
             channel = grpc.insecure_channel("{}:{}".format(_HOST, _PORT), options = options)
             stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
-            result = stub.Predict(request, timeout=10.0)
+            result = stub.Predict(request, timeout = 10.0)
 
             # logging.warning(f'Output:{result}')
             logging.warning(f'OutputType:{type(result)}')
@@ -73,11 +73,11 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
 
             #-----------------------------------------------------------
             # img's gray scale image
-            gray=img.convert('L')
+            gray = img.convert('L')
             # human segmentation mask image
-            mask=postp.segmentation(output, w, h)
+            mask = postp.make_human_mask(output, w, h)
             # masking 'gray' and 'mask' images
-            image=Image.composite(gray, img, mask)
+            image = Image.composite(gray, img, mask)
 
             image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
 
