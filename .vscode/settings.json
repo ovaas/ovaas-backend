@@ -12,5 +12,8 @@
   "python.analysis.diagnosticSeverityOverrides": {
     "reportUnboundVariable" : "information",
    },
-  "cSpell.enabled": false
+  "cSpell.enabled": false,
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": "file:///Users/hanlee/Project/ovaas-backend/.github/workflows/deploy.yml"
+  }
 }
